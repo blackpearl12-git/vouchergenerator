@@ -350,7 +350,11 @@ async def generate_vouchers(vouchers: List[Dict[str, Any]]):
         return FileResponse(
             path=zip_path,
             filename=zip_filename,
-            media_type='application/zip'
+            media_type='application/zip',
+            headers={
+                "Content-Disposition": f"attachment; filename={zip_filename}",
+                "Access-Control-Expose-Headers": "Content-Disposition"
+            }
         )
         
     except Exception as e:

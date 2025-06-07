@@ -189,8 +189,14 @@ def main():
         tester.print_summary()
         return 1
     
-    # Create sample Excel file
-    excel_file = tester.create_sample_excel()
+    # Use the existing sample Excel file
+    excel_file = "/app/sample_hotel_bookings.xlsx"
+    if not os.path.exists(excel_file):
+        print(f"❌ Sample Excel file not found at {excel_file}")
+        tester.print_summary()
+        return 1
+    
+    print(f"✅ Using sample Excel file: {excel_file}")
     
     # Test uploading Excel file
     upload_success, vouchers = tester.test_upload_excel(excel_file)
@@ -205,10 +211,6 @@ def main():
     
     # Test invalid file upload
     tester.test_invalid_file_upload()
-    
-    # Clean up
-    if os.path.exists(excel_file):
-        os.unlink(excel_file)
     
     # Print summary
     tester.print_summary()

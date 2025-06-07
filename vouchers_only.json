@@ -1,0 +1,59 @@
+[
+  {
+    "row_number": 1,
+    "data": {
+      "confirmation_number": "399458300",
+      "hotel_name": "Novotel Dubai Al Barsha 4*",
+      "lead_passenger_name": "Mr PHILIP BENZIGAR",
+      "address": "Sheikh Zayed Rd - opp. InsuranceMarket Metro Station - Al Barsha - Al Barsha 1 - Dubai - United Arab Emirates",
+      "check_in_date": "08-May-2025 / 02 PM",
+      "check_out_date": "14-May-2025 / 11 AM",
+      "room_type": "Superior Double Room",
+      "no_of_rooms": "1",
+      "no_of_adults": "1",
+      "no_of_children": "0",
+      "duration": "06 Nights",
+      "inclusions": "Breakfast & Wi-Fi",
+      "hotel_contact_no": "+971 4 304 9000",
+      "cancellation_policy": "Free cancellation before 07 May 2025 11:59 AM"
+    }
+  },
+  {
+    "row_number": 2,
+    "data": {
+      "confirmation_number": "399458301",
+      "hotel_name": "Hilton Garden Inn Dubai Mall",
+      "lead_passenger_name": "Ms SARAH JOHNSON",
+      "address": "Downtown Dubai - Near Dubai Mall - Dubai - United Arab Emirates",
+      "check_in_date": "10-May-2025 / 03 PM",
+      "check_out_date": "15-May-2025 / 12 PM",
+      "room_type": "King Room with City View",
+      "no_of_rooms": "1",
+      "no_of_adults": "2",
+      "no_of_children": "1",
+      "duration": "05 Nights",
+      "inclusions": "Breakfast",
+      "hotel_contact_no": "+971 4 438 9999",
+      "cancellation_policy": "Free cancellation before 09 May 2025 11:59 AM"
+    }
+  },
+  {
+    "row_number": 3,
+    "data": {
+      "confirmation_number": "399458302",
+      "hotel_name": "JW Marriott Marquis Dubai",
+      "lead_passenger_name": "Mr DAVID SMITH",
+      "address": "Business Bay - Sheikh Zayed Road - Dubai - United Arab Emirates",
+      "check_in_date": "12-May-2025 / 02 PM",
+      "check_out_date": "18-May-2025 / 11 AM",
+      "room_type": "Executive Suite",
+      "no_of_rooms": "2",
+      "no_of_adults": "4",
+      "no_of_children": "2",
+      "duration": "06 Nights",
+      "inclusions": "Breakfast & Airport Transfer",
+      "hotel_contact_no": "+971 4 414 0000",
+      "cancellation_policy": "Free cancellation before 11 May 2025 11:59 AM"
+    }
+  }
+]

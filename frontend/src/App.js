@@ -84,22 +84,64 @@ function App() {
     try {
       const response = await axios.post(`${API}/generate-vouchers`, vouchers, {
         responseType: 'blob',
+        headers: {
+          'Accept': 'application/zip'
+        }
       });
 
-      // Create download link
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `hotel_vouchers_${new Date().toISOString().slice(0, 10)}.zip`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
+      console.log('Response received:', response);
+      console.log('Response headers:', response.headers);
+      console.log('Response data type:', typeof response.data);
+      console.log('Response data size:', response.data.size);
 
-      setStatus(`Successfully generated and downloaded ${vouchers.length} vouchers`);
+      // Check if we actually got a blob
+      if (response.data && response.data.size > 0) {
+        // Create download link with improved method
+        const blob = new Blob([response.data], { type: 'application/zip' });
+        const url = window.URL.createObjectURL(blob);
+        
+        // Create a temporary download link
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = url;
+        
+        // Generate filename with timestamp
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `hotel_vouchers_${timestamp}.zip`;
+        link.download = filename;
+        
+        // Append to body, click, and cleanup
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup
+        setTimeout(() => {
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        }, 100);
+
+        setStatus(`Successfully generated and downloaded ${vouchers.length} vouchers as ${filename}`);
+      } else {
+        throw new Error('Received empty response from server');
+      }
     } catch (error) {
       console.error("Error generating vouchers:", error);
-      setStatus(`Error: ${error.response?.data?.detail || "Failed to generate vouchers"}`);
+      console.error("Error details:", error.response);
+      
+      // More detailed error handling
+      if (error.response) {
+        if (error.response.data instanceof Blob) {
+          // If error response is a blob, try to read it as text
+          const errorText = await error.response.data.text();
+          setStatus(`Error: ${errorText}`);
+        } else {
+          setStatus(`Error: ${error.response.data?.detail || error.response.statusText || "Failed to generate vouchers"}`);
+        }
+      } else if (error.request) {
+        setStatus("Error: No response from server. Please check your connection.");
+      } else {
+        setStatus(`Error: ${error.message}`);
+      }
     } finally {
       setLoading(false);
     }

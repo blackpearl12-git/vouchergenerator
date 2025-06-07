@@ -308,6 +308,48 @@ function App() {
                 >
                   {loading ? "Generating PDFs..." : `Generate ${vouchers.length} PDF Vouchers`}
                 </button>
+                
+                {/* Debug download button */}
+                <button
+                  onClick={async () => {
+                    try {
+                      // Direct API call for testing
+                      const response = await fetch(`${API}/generate-vouchers`, {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(vouchers)
+                      });
+                      
+                      if (response.ok) {
+                        const blob = await response.blob();
+                        console.log('Blob size:', blob.size);
+                        
+                        // Create download using fetch API
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `vouchers_${Date.now()}.zip`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        
+                        setStatus('Direct download attempted via fetch API');
+                      } else {
+                        setStatus(`Direct download failed: ${response.status}`);
+                      }
+                    } catch (err) {
+                      console.error('Direct download error:', err);
+                      setStatus(`Direct download error: ${err.message}`);
+                    }
+                  }}
+                  disabled={loading}
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                >
+                  Test Direct Download (Debug)
+                </button>
               </div>
             </div>
           )}

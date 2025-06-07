@@ -96,31 +96,56 @@ function App() {
 
       // Check if we actually got a blob
       if (response.data && response.data.size > 0) {
-        // Create download link with improved method
-        const blob = new Blob([response.data], { type: 'application/zip' });
-        const url = window.URL.createObjectURL(blob);
-        
-        // Create a temporary download link
-        const link = document.createElement('a');
-        link.style.display = 'none';
-        link.href = url;
-        
-        // Generate filename with timestamp
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-        const filename = `hotel_vouchers_${timestamp}.zip`;
-        link.download = filename;
-        
-        // Append to body, click, and cleanup
-        document.body.appendChild(link);
-        link.click();
-        
-        // Cleanup
-        setTimeout(() => {
+        // Method 1: Try direct download
+        try {
+          const blob = new Blob([response.data], { type: 'application/zip' });
+          const url = window.URL.createObjectURL(blob);
+          
+          // Generate filename with timestamp
+          const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+          const filename = `hotel_vouchers_${timestamp}.zip`;
+          
+          // Try using the download attribute
+          const link = document.createElement('a');
+          link.style.display = 'none';
+          link.href = url;
+          link.download = filename;
+          
+          document.body.appendChild(link);
+          link.click();
           document.body.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        }, 100);
+          
+          // Cleanup after a short delay
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 1000);
 
-        setStatus(`Successfully generated and downloaded ${vouchers.length} vouchers as ${filename}`);
+          setStatus(`Successfully generated and downloaded ${vouchers.length} vouchers as ${filename}`);
+          
+        } catch (downloadError) {
+          console.error('Direct download failed, trying alternative method:', downloadError);
+          
+          // Method 2: Alternative download method
+          try {
+            const blob = new Blob([response.data], { type: 'application/zip' });
+            
+            // For browsers that don't support download attribute
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+              // IE/Edge
+              window.navigator.msSaveOrOpenBlob(blob, `hotel_vouchers_${Date.now()}.zip`);
+            } else {
+              // Modern browsers with URL.createObjectURL
+              const url = URL.createObjectURL(blob);
+              window.open(url, '_blank');
+              setTimeout(() => URL.revokeObjectURL(url), 1000);
+            }
+            
+            setStatus(`Successfully generated ${vouchers.length} vouchers. Check your downloads folder.`);
+          } catch (altError) {
+            console.error('Alternative download method also failed:', altError);
+            setStatus(`Vouchers generated successfully, but automatic download failed. Please try again or contact support.`);
+          }
+        }
       } else {
         throw new Error('Received empty response from server');
       }

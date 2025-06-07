@@ -292,10 +292,12 @@ async def upload_excel_file(file: UploadFile = File(...)):
             # Convert all values to strings and handle NaN values
             cleaned_row = {}
             for key, value in row.items():
+                # Normalize key: lowercase, replace spaces and hyphens with underscores
+                normalized_key = str(key).lower().replace(' ', '_').replace('-', '_')
                 if pd.isna(value):
-                    cleaned_row[str(key).lower().replace(' ', '_')] = ""
+                    cleaned_row[normalized_key] = ""
                 else:
-                    cleaned_row[str(key).lower().replace(' ', '_')] = str(value)
+                    cleaned_row[normalized_key] = str(value)
             
             processed_vouchers.append({
                 "row_number": i + 1,
